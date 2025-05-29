@@ -1,0 +1,23 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment
+myenv/
+
+# Ignore dataset file
+dataset.csv
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+
+# VSCode settings (optional)
+.vscode/
+
+# macOS files (optional)
+.DS_Store
+
+# Env files (optional)
+.env

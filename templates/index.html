@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuisine Dataset Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    header {
+      background-color: #343a40;
+      color: white;
+      padding: 1rem 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .section-title {
+      margin: 2rem 0 1rem;
+      font-weight: bold;
+      color: #495057;
+    }
+
+    .chart-container {
+      margin-bottom: 3rem;
+    }
+
+    .data-preview {
+      overflow-x: auto;
+      background-color: #ffffff;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    pre {
+      background: #212529;
+      color: #f1f1f1;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🍽️ Cuisine Dataset Dashboard</h1>
+</header>
+
+<div class="container">
+
+  <!-- Data Preview Table -->
+  <h2 class="section-title">📋 Data Preview</h2>
+  <div class="data-preview">
+    {{ preview|safe }}
+  </div>
+
+  <!-- Dataset Info -->
+  <h2 class="section-title">📄 Dataset Info</h2>
+  <pre>{{ df_info }}</pre>
+
+  <!-- Charts -->
+  <h2 class="section-title">📊 Top 10 Cuisines</h2>
+  <div class="chart-container">
+    <canvas id="cuisineBarChart"></canvas>
+  </div>
+
+  <h2 class="section-title">🥘 Table Booking Status</h2>
+  <div class="chart-container">
+    <canvas id="tableBookingPie"></canvas>
+  </div>
+</div>
+
+<!-- JavaScript to render charts -->
+<script>
+  // Replace with your dynamic data from Flask if needed
+  const topCuisines = {{ top_cuisines | safe }};
+  const cuisineLabels = Object.keys(topCuisines);
+  const cuisineCounts = Object.values(topCuisines);
+
+  const tableBookingData = {{ table_booking_status | safe }};
+  const tableLabels = Object.keys(tableBookingData);
+  const tableCounts = Object.values(tableBookingData);
+
+  // Bar Chart for Top Cuisines
+  const ctxBar = document.getElementById('cuisineBarChart').getContext('2d');
+  new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: cuisineLabels,
+      datasets: [{
+        label: 'Count',
+        data: cuisineCounts,
+        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: 'Top 10 Cuisines in Dataset'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // Pie Chart for Table Booking
+  const ctxPie = document.getElementById('tableBookingPie').getContext('2d');
+  new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+      labels: tableLabels,
+      datasets: [{
+        data: tableCounts,
+        backgroundColor: ['#198754', '#dc3545']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Table Booking Distribution'
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
